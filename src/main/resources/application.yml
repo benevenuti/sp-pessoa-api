@@ -1,0 +1,6 @@
+spring:
+  data:
+    rest:
+      base-path: /api/v1
+    mongodb:
+      uri: mongodb+srv://spApi:ecGlbQAsD8TffQWi@sp0.a5yii.mongodb.net/sp-pessoa-api?retryWrites=true&w=majority
