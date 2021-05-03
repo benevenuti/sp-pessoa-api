@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Language" content="pt-br, en">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Um CRUD simples de pessoa que consome REST API">
+    <meta name="author" content="benevenuti@gmail.com">
+    <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+    <title>CRUD de Pessoa</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel='stylesheet' media='screen' href='/webjars/bootstrap/4.6.0/css/bootstrap.min.css'>
+
+    <!-- customizados -->
+    <link href="add-pessoa.css" rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">CRUD Pessoa</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">index<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">listagem</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<main role="main" class="container">
+
+    <div>
+        <h1 style="padding-top: 3rem">Lista de pessoas</h1>
+
+        <p class="float-right">
+            <!-- Button trigger modal -->
+            <button id="btn-abrir-modal" type="button"
+                    data-toggle="modal"
+                    data-target="#modalCadastroPessoa"
+                    class="btn btn-primary">
+                Adicionar
+            </button>
+
+            <button id="btn-atualizar" type="button" class="btn btn-info">Atualizar</button>
+
+        </p>
+        <div id="alert-msg"></div>
+        <table class="table table-striped table-dark">
+            <thead>
+            <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">Sexo</th>
+                <th scope="col">E-mail</th>
+                <th scope="col">Nascimento</th>
+                <th scope="col">Naturalidade</th>
+                <th scope="col">Nacionalidade</th>
+                <th scope="col">CPF</th>
+                <th scope="col">A&ccedil;&otilde;es</th>
+            </tr>
+            </thead>
+            <tbody id="tbody-pessoa">
+            </tbody>
+        </table>
+    </div>
+
+</main><!-- /.container -->
+
+<!-- Modal Confirma -->
+<div id="modalConfirmacao" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalConfirmacaoLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar exclus&atilde;o</h5>
+                <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>-->
+            </div>
+            <div class="modal-body">
+                <p>Confirma exclus&atilde;o de <span id="modal-pessoa-nome" style="font-weight: bold">pessoa</span>?
+                    <br>
+                    Essa opera&ccedil;&atilde;o n&atilde;o pode ser desfeita.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-modal-cancelar" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar
+                </button>
+                <button id="btn-modal-excluir" type="button" class="btn btn-danger" onclick="excluirPessoa(this)">
+                    Excluir
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Cadastro -->
+<div class="modal fade" id="modalCadastroPessoa" tabindex="-1" role="dialog" aria-labelledby="modalCadastroPessoaTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Cadastro de Pessoa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div id="modal-alert-msg"></div>
+                <form class="needs-validation" novalidate>
+
+                    <input type="hidden" id="pessoaId">
+
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="nome">Nome</label>
+                            <input type="text" class="form-control" id="nome" placeholder="" maxlength="100" value=""
+                                   required>
+                            <div class="invalid-feedback">
+                                Nome inv&aacute;lido.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="email">E-mail<span class="text-muted">(Opcional)</span></label>
+                            <input type="email" class="form-control" id="email" placeholder="voce@exemplo.com.br">
+                            <div class="invalid-feedback">
+                                E-mail inv&aacute;lido.
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="sexo">Sexo</label>
+                            <select class="custom-select d-block w-100" id="sexo">
+                                <option value="">Selecione...</option>
+                                <option value="M">Masculino</option>
+                                <option value="F">Feminino</option>
+                                <option value="I">N&atilde;o Informado</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                O campo Sexo deve ser informado.
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="dataNascimento">Data de Nascimento</label>
+                            <input type="date" class="form-control" id="dataNascimento" required>
+                            <div class="invalid-feedback">
+                                O campo Data de Nascimento deve ser informado.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-4 mb-3">
+                            <label for="nacionalidade">Nacionalidade</label>
+                            <select class="custom-select d-block w-100" id="nacionalidade">
+                                <option value="">Selecione...</option>
+                                <option value="Brasil">Brasil</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                O campo Nacionalidade &eacute; inv&aacute;lido
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="naturalidade">Naturalidade</label>
+                            <select class="custom-select d-block w-100" id="naturalidade">
+                                <option value="">Selecione...</option>
+                                <option value="Passo Fundo, RS">Passo Fundo, RS</option>
+                                <option value="Porto Alegre, RS">Porto Alegre, RS</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                O campo Naturalidade &eacute; inv&aacute;lido
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="cpf">CPF<span class="text-muted">(somente n&uacute;meros)</span></label>
+                            <input type="number" class="form-control" id="cpf" placeholder="" required>
+                            <div class="invalid-feedback">
+                                O campo CPF deve ser v&aacute;lido
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="btn-cad-salvar" class="btn btn-primary btn-block" type="submit">Salvar</button>
+                    <button id="btn-cad-cancelar" class="btn btn-secondary btn-block" data-dismiss="modal"
+                            type="button">Cancelar
+                    </button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div id="msg"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type='text/javascript' src='/webjars/jquery/3.6.0/jquery.min.js'></script>
+<script type='text/javascript' src='/webjars/popper.js/2.5.4/umd/popper.js'></script>
+<script type='text/javascript' src='/webjars/bootstrap/4.6.0/js/bootstrap.min.js'></script>
+
+<!-- script local -->
+<script type='text/javascript' src='add-pessoa.js'></script>
+
+</body>
+</html>

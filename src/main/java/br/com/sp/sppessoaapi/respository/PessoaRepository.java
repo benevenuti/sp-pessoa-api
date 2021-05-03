@@ -16,8 +16,8 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  * pois utiliza os verbos (GET, POST, PUT...) de forma mais adequada e traz a navegação com hypermedia
  */
 @RepositoryRestResource(
-        collectionResourceRel = "pessoas",
-        path = "pessoas",
+        collectionResourceRel = "pessoa",
+        path = "pessoa",
         collectionResourceDescription = @Description("Collection de Pessoas"))
 @ApiOperation(value = "CRUD Api para Pessoas", authorizations = {@Authorization(value = "basicAuth")})
 public interface PessoaRepository extends MongoRepository<Pessoa, ObjectId> {

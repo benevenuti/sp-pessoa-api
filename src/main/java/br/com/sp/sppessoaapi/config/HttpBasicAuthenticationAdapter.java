@@ -25,7 +25,8 @@ public class HttpBasicAuthenticationAdapter extends WebSecurityConfigurerAdapter
             "/swagger-ui/**",
             // home
             "/",
-            "/amigo.png"
+            "/webjars/**",
+            "/res/**"
     };
 
 

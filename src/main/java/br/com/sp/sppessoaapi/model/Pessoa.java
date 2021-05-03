@@ -57,6 +57,11 @@ public class Pessoa implements Persistable<ObjectId> {
     @Field("audit_metadata")
     private AuditMetadata auditMetadata = new AuditMetadata();
 
+    // é feio, mas bufa sem expor o id mesmo
+    public String get_id() {
+        return this.id.toHexString();
+    }
+
     // informa ao spring data auditing que o registro é novo ou não
     // e assim, deve setar o createdAt ou o lastModifiedAt
     @Override

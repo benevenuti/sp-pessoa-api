@@ -1,4 +1,4 @@
-package br.com.sp.sppessoaapi.source;
+package br.com.sp.sppessoaapi.controllers;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
